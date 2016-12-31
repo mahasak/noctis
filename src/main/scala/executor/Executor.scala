@@ -1,7 +1,7 @@
 package executor
 
 import story.Story
-
+/*
 class Executor {
   def execute(story: Story): Unit = {
     val executeContext = new ExecuteContext()
@@ -10,7 +10,7 @@ class Executor {
   }
 }
 
-
+*/
 class ExecuteContext {
 
 }
