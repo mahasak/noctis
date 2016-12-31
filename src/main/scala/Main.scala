@@ -1,6 +1,11 @@
-object Main {
+import com.typesafe.scalalogging.LazyLogging
+
+object Main extends LazyLogging {
   def main(args: Array[String]) = {
-    //Run liquibase
+
+    logger.info("Running liquibase")
     SchemaMigration.run()
+
+
   }
 }
