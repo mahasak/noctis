@@ -3,13 +3,11 @@ package executor
 import org.scalatest._
 import story.{Step, StepResult, Story}
 
-import scala.collection.mutable.Stack
-
 class ExecutorSpec extends FlatSpec with Matchers {
   val executor = new Executor()
 
-  it should "Create a result" in {
-    val stepResult = new StepResult {};
+  it should "create a result" in {
+    val stepResult = StepResult.Pass
 
     val story = new Story(List(new Step() {
       override def doStep(executeContext: ExecuteContext): StepResult = stepResult
@@ -22,7 +20,7 @@ class ExecutorSpec extends FlatSpec with Matchers {
   }
 
 
-  it should "Record an exception" in {
+  it should "record an exception" in {
     val story = new Story(List(new Step() {
       override def doStep(executeContext: ExecuteContext): StepResult = throw new IllegalArgumentException("my exception")
     }))

@@ -1,6 +1,7 @@
 package story
 
 import executor.ExecuteContext
+import story.StepResultStatus.StepResultStatus
 
 case class Story(steps: Seq[Step])
 
@@ -63,4 +64,14 @@ class BearStoryParser {
 
 }
 
-case class StepResult()
+case class StepResult(status: StepResultStatus)
+object StepResult {
+  val Pass = StepResult(StepResultStatus.Pass)
+  val Fail = StepResult(StepResultStatus.Fail)
+}
+
+object StepResultStatus extends Enumeration {
+  type StepResultStatus = Value
+  val Pass = Value(0)
+  val Fail = Value(1)
+}
