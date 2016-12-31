@@ -45,13 +45,13 @@ case class StepNoop(param: StepParameter) extends DoStep {
 
 class UrsaParser {
   def stepMatcher(string: String): Step = {
-    val regexGoto = """Go to ([a-z]+)""".r
+    val regexGoto = """(Go to).*([^\s]+)""".r
     val regexClick = """(Click).*([^\s]+)""".r
     val regexType = """(Type).*([^\s]+)""".r
     val regexAssert = """(Assert).*([^\s]+)""".r
 
     string match {
-      case regexGoto(url) => StepGoto(StepParameter("", url, ""))
+      case regexGoto(_*) => StepGoto(StepParameter("", "", ""))
       case regexClick(_*) => StepClick(StepParameter())
       case regexType(_*) => StepType(StepParameter())
       case regexAssert(_*) => StepAssert(StepParameter())
