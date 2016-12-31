@@ -8,4 +8,4 @@ trait Step {
   def doStep(executeContext: ExecuteContext): StepResult
 }
 
-class StepResult {}
+case class StepResult()

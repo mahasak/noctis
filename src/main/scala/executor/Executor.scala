@@ -2,7 +2,7 @@ package executor
 
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.firefox.FirefoxDriver
-import story.{Step, Story}
+import story.{Step, Story, StepResult}
 
 class Executor extends LazyLogging {
   def execute(runId: String, story: Story): ExecuteResult = {
@@ -17,19 +17,19 @@ class Executor extends LazyLogging {
   }
 
   def executeStep(executeContext: ExecuteContext, step: Step): StepExecuteResult = {
-    val startTime = System.currentTimeMillis
-    val stepExecuteResult = new StepExecuteResult()
+    val rb = new StepExecuteResult.Builder()
 
+    rb.withStartTime(System.currentTimeMillis())
     try {
-      step.doStep(executeContext)
+      rb.withResult( step.doStep(executeContext) )
     } catch {
-      case e:Exception => stepExecuteResult.exception = Some(e)
+      case e:Exception => rb.withException( e )
     }
     finally {
-      stepExecuteResult.time = Some(System.currentTimeMillis() - startTime)
+      rb.withEndTime(System.currentTimeMillis())
     }
 
-    return stepExecuteResult
+    return rb.build()
   }
 }
 
@@ -38,12 +38,32 @@ case class ExecuteResult(
   val stepExecuteResults: List[StepExecuteResult]
 )
 
-class StepExecuteResult {
-  var time: Option[Long] = Option.empty
-  var exception: Option[Exception] = Option.empty
-  var result: Option[Exception] = Option.empty
+case class StepExecuteResult(val startTime:Long, val endTime: Long, val result: Option[StepResult], val ex:Option[Exception])
+object StepExecuteResult {
+  class Builder {
+    private var startTime: Option[Long] = Option.empty
+    private var endTime: Option[Long] = Option.empty
+    private var exception: Option[Exception] = Option.empty
+    private var result: Option[StepResult] = Option.empty
+
+    def withException(e:Exception) = { exception = Some(e) }
+    def withResult(r:StepResult) = { result = Some(r) }
+    def withStartTime(t: Long) = { startTime = Some(t) }
+    def withEndTime(t: Long) = { endTime = Some(t) }
+
+    def build():StepExecuteResult = {
+      if(startTime.isEmpty || endTime.isEmpty) {
+        throw new IllegalArgumentException("No start or end time")
+      }
+      if(exception.isDefined && result.isDefined) {
+        throw new IllegalArgumentException("Both exception and result is defined")
+      }
+
+      return StepExecuteResult(startTime.get, endTime.get, result, exception)
+    }
+  }
 }
 
 class ExecuteContext {
-  val driver = new FirefoxDriver();
+  lazy val driver = new FirefoxDriver()
 }
