@@ -1,6 +1,7 @@
 package story
 
 import executor.ExecuteContext
+import story.StepResultStatus.StepResultStatus
 
 case class Story(steps: Seq[Step])
 
@@ -13,31 +14,31 @@ trait AssertStep extends Step
 
 case class StepGoto(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
 case class StepClick(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
 case class StepType(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
 case class StepAssert(param: StepParameter) extends AssertStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
 case class StepNoop(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
@@ -65,6 +66,18 @@ class UrsaParser {
 
 }
 
+
 case class StepParameter(id: String = "", url: String ="", expect: String= "")
 
-case class StepResult()
+case class StepResult(status: StepResultStatus)
+object StepResult {
+  val Pass = StepResult(StepResultStatus.Pass)
+  val Fail = StepResult(StepResultStatus.Fail)
+}
+
+object StepResultStatus extends Enumeration {
+  type StepResultStatus = Value
+  val Pass = Value(0)
+  val Fail = Value(1)
+}
+
