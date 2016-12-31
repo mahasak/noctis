@@ -11,31 +11,31 @@ trait Step {
 
 class StepGoto extends Step {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
 class StepClick extends Step {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
 class StepType extends Step {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
 class StepAssert extends Step {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
 class StepNoop extends Step {
   def doStep(executeContext: ExecuteContext): StepResult = {
-    return new StepResult
+    return StepResult.Pass
   }
 }
 
