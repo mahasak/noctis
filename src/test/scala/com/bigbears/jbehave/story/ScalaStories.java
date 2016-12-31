@@ -39,11 +39,13 @@ public class ScalaStories extends JUnitStories {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return new InstanceStepsFactory(configuration(),new ScalaSteps());
+        return new InstanceStepsFactory(configuration(),
+                new ScalaSteps());
     }
 
     public List<CandidateSteps> candidateStepses() {
-        return new InstanceStepsFactory(configuration(),new ScalaSteps()).createCandidateSteps();
+        return new InstanceStepsFactory(configuration(),
+                new ScalaSteps()).createCandidateSteps();
     }
 
 }
