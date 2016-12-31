@@ -33,12 +33,11 @@ public class ScalaStories extends JUnitStories {
         return new StoryFinder()
                 .findPaths(codeLocationFromClass(this.getClass()), "**/*.story", "");
     }
-    /*
+
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return new ScalaStepsFactory(configuration(), new ScalaContext("ScalaSteps"));
+        return new InstanceStepsFactory(configuration(),new ScalaSteps());
     }
-    */
 
     public List<CandidateSteps> candidateStepses() {
         return new InstanceStepsFactory(configuration(),new ScalaSteps()).createCandidateSteps();
