@@ -8,7 +8,7 @@ import org.scalatest.FunSuite
 class BearStoryParserSpec extends FunSuite {
 
   test("testParseStory") {
-    var parser = new BearStoryParser
+    var parser = new UrsaParser
     val storyTest =
       """
         |Go to "www.agoda.com"

@@ -1,14 +1,13 @@
 import com.typesafe.scalalogging.LazyLogging
-import story.BearStoryParser
+import story.UrsaParser
 
 object Main extends LazyLogging {
   def main(args: Array[String]) = {
 
     logger.info("Running liquibase")
 
-
-    // SchemaMigration.run()
-    var parser = new BearStoryParser
+    SchemaMigration.run()
+    var parser = new UrsaParser
     val storyTest =
       """
         |Go to "www.agoda.com"
