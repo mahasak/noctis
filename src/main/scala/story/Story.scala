@@ -5,36 +5,36 @@ import executor.ExecuteContext
 case class Story(steps: Seq[Step])
 
 trait Step {
-  def doStep(executeContext: ExecuteContext)
+  def doStep(executeContext: ExecuteContext) : StepResult
 }
 
 class StepGoto extends Step {
-  def doStep(executeContext: ExecuteContext): Unit = {
-    println("do goto step");
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    return new StepResult
   }
 }
 
 class StepClick extends Step {
-  def doStep(executeContext: ExecuteContext): Unit = {
-    println("do click step");
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    return new StepResult
   }
 }
 
 class StepType extends Step {
-  def doStep(executeContext: ExecuteContext): Unit = {
-    println("do type step");
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    return new StepResult
   }
 }
 
 class StepAssert extends Step {
-  def doStep(executeContext: ExecuteContext): Unit = {
-    println("do assert step");
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    return new StepResult
   }
 }
 
 class StepNoop extends Step {
-  def doStep(executeContext: ExecuteContext): Unit = {
-    println("do nothing step");
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    return new StepResult
   }
 }
 
@@ -62,3 +62,5 @@ class BearStoryParser {
     .map(s => stepMatcher(s)))
 
 }
+
+case class StepResult()
