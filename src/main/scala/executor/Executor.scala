@@ -2,7 +2,11 @@ package executor
 
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.firefox.FirefoxDriver
-import story.{Step, Story, StepResult}
+import story.{Step, StepResult, StepResultStatus, Story}
+
+import scala.util.control.Breaks._
+
+import scala.collection.mutable.ListBuffer
 
 class Executor extends LazyLogging {
   def execute(runId: String, story: Story): ExecuteResult = {
@@ -11,9 +15,19 @@ class Executor extends LazyLogging {
 
     val executeContext = new ExecuteContext()
 
-    val stepExecuteResults =  story.steps.map( step => executeStep(executeContext, step) )
+    val stepExecuteResults = new ListBuffer[StepExecuteResult]
+    breakable {
+      for (step <- story.steps) {
+        val stepExecuteResult = executeStep(executeContext, step)
 
-    return new ExecuteResult(runId, stepExecuteResults)
+        stepExecuteResults += stepExecuteResult
+
+        if (stepExecuteResult.result.isDefined && stepExecuteResult.result.get.status == StepResultStatus.Fail) {
+          break
+        }
+      }
+    }
+    return new ExecuteResult(runId, stepExecuteResults.toList)
   }
 
   def executeStep(executeContext: ExecuteContext, step: Step): StepExecuteResult = {
