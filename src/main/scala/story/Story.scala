@@ -5,7 +5,7 @@ import org.openqa.selenium.support.ui.{ExpectedCondition, WebDriverWait}
 import org.openqa.selenium.{By, Keys, WebDriver, WebElement}
 import story.StepResultStatus.StepResultStatus
 
-case class Story(steps: Seq[Step])
+case class Story(steps: List[Step])
 
 trait Step {
   def waitFor(driver: WebDriver, f: (WebDriver) => WebElement, timeOut: Int) : WebElement = {
@@ -93,7 +93,9 @@ class UrsaParser {
   def parseStory(str: String) = Story(str.split("\n")
     .map(_.trim)
     .filter(s => !s.isEmpty)
-    .map(s => stepMatcher(s)))
+    .map(s => stepMatcher(s))
+    .toList
+  )
 
 }
 

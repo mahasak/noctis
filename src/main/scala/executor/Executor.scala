@@ -9,7 +9,7 @@ class Executor extends LazyLogging {
   def execute(runId: String, story: Story): ExecuteResult = {
     val executeContext = new ExecuteContext(runId)
 
-    def executeSteps(steps: Seq[Step]):Seq[StepExecuteResult] = {
+    def executeSteps(steps: List[Step]):Seq[StepExecuteResult] = {
       steps match {
         case step :: remainingSteps => {
           val stepExecuteResult = executeStep(executeContext, step)
