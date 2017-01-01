@@ -20,6 +20,13 @@ case class StepGoto(param: StepParameter) extends DoStep {
   }
 }
 
+case class StepClose(param: StepParameter) extends DoStep {
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    executeContext.driver.quit()
+    StepResult.Pass
+  }
+}
+
 case class StepClick(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
     StepResult.Pass
@@ -46,16 +53,18 @@ case class StepNoop(param: StepParameter) extends DoStep {
 
 class UrsaParser {
   def stepMatcher(string: String): Step = {
-    val regexGoto = """(Go to).*([^\s]+)""".r
+    val regexGoto = """(Go to) "(.*?)"""".r
     val regexClick = """(Click).*([^\s]+)""".r
     val regexType = """(Type).*([^\s]+)""".r
     val regexAssert = """(Assert).*([^\s]+)""".r
+    val regexClose = """(Close browser).*([^\s]+)""".r
 
     string match {
-      case regexGoto(_*) => StepGoto(StepParameter("", "", ""))
+      case regexGoto(_, url) => StepGoto(StepParameter("", url, ""))
       case regexClick(_*) => StepClick(StepParameter())
       case regexType(_*) => StepType(StepParameter())
       case regexAssert(_*) => StepAssert(StepParameter())
+      case regexClose(_*) => StepClose(StepParameter())
       case _ => StepNoop(new StepParameter)
     }
   }

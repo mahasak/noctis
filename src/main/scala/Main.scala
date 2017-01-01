@@ -8,14 +8,5 @@ object Main extends LazyLogging {
     logger.info("Running liquibase")
 
     SchemaMigration.run()
-
-    val parser = new UrsaParser
-    val storyTest =
-      """
-        |Go to "www.agoda.com"
-        |Assert title should be "Agoda"
-      """.stripMargin
-
-    parser.parseStory(storyTest)
   }
 }
