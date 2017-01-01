@@ -1,7 +1,7 @@
 package executor
 
-object Repoter {
+object Reporter {
   def report(stepExecuteResult: StepExecuteResult):Unit = {
-    stepExecuteResult.insert()
+    stepExecuteResult.dbObject.insert()
   }
 }

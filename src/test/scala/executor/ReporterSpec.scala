@@ -12,6 +12,6 @@ class ReporterSpec extends FunSuite with Matchers with DatabaseEnabled {
         .withStartTime(System.currentTimeMillis())
         .withEndTime(System.currentTimeMillis())
         .build()
-    stepExecuteResult.insert()
+    executor.Reporter.report(stepExecuteResult)
   }
 }

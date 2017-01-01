@@ -11,21 +11,19 @@ case class ExecuteResult(
 )
 
 case class StepExecuteResult(
-  val id: Option[Long],
   val runId: String,
   val startTime:Long,
   val endTime: Long,
   val result: Option[StepResult],
-  val ex:Option[Exception]) extends DBEntity {
+  val ex:Option[Exception]) {
 
   def status = result.map( _.status ).getOrElse(StepResultStatus.Fail)
 
-  override def insert()(implicit s: DBSession = AutoSession): Long = {
-    val resString = result.map(_.toString).getOrElse(null)
-    val exString = ex.map( _.toString ).getOrElse(null)
-    sql"insert into StepExecuteResult(runId, startTime, endTime, result, ex) values (${runId}, ${startTime}, ${endTime}, ${resString}, ${exString})"
-      .updateAndReturnGeneratedKey.apply()
-  }
+  def dbObject = db.StepExecuteResult(
+    None, runId, startTime, endTime,
+    status.toString,
+    ex.map( _.toString ).getOrElse(null)
+  )
 }
 object StepExecuteResult {
   class Builder(val runId:String) {
@@ -47,7 +45,7 @@ object StepExecuteResult {
         throw new IllegalArgumentException("Both exception and result is defined")
       }
 
-      return StepExecuteResult(None, runId, startTime.get, endTime.get, result, exception)
+      return StepExecuteResult(runId, startTime.get, endTime.get, result, exception)
     }
   }
 }

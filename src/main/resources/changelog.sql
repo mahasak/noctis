@@ -6,6 +6,6 @@ create table StepExecuteResult (
   runId varchar(80),
   startTime INTEGER,
   endTime INTEGER,
-  result TEXT,
+  status varchar(20),
   ex TEXT
 );
