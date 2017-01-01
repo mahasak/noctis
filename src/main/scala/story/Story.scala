@@ -3,7 +3,7 @@ package story
 import executor.ExecuteContext
 import story.StepResultStatus.StepResultStatus
 
-case class Story(steps: Seq[Step])
+case class Story(steps: List[Step])
 
 trait Step {
   def doStep(executeContext: ExecuteContext): StepResult
@@ -72,7 +72,9 @@ class UrsaParser {
   def parseStory(str: String) = Story(str.split("\n")
     .map(_.trim)
     .filter(s => !s.isEmpty)
-    .map(s => stepMatcher(s)))
+    .map(s => stepMatcher(s))
+    .toList
+  )
 
 }
 
