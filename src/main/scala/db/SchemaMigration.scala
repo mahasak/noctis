@@ -1,8 +1,8 @@
-// Liquibase SBT dependency is something like this:
-//
+package db
 
 import java.sql.{Connection, DriverManager}
 
+import config.Config
 import liquibase.Liquibase
 import liquibase.database.DatabaseFactory
 import liquibase.database.jvm.JdbcConnection

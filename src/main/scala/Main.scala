@@ -1,12 +1,14 @@
 import com.typesafe.scalalogging.LazyLogging
+import db.SchemaMigration
 import story.UrsaParser
 
 object Main extends LazyLogging {
-  def main(args: Array[String]) = {
+  def main(args: Array[String]):Unit = {
 
     logger.info("Running liquibase")
 
     SchemaMigration.run()
+
     var parser = new UrsaParser
     val storyTest =
       """

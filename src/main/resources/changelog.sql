@@ -1,9 +1,11 @@
 --liquibase formatted sql
 
 --changeset default:1
--- create table person (
---   id integer not null primary key autoincrement,
---   firstname varchar(80),
---   lastname varchar(80) not null,
---   state varchar(2)
--- );
+create table StepExecuteResult (
+  id integer not null primary key autoincrement,
+  runId varchar(80),
+  startTime INTEGER,
+  endTime INTEGER,
+  result TEXT,
+  ex TEXT
+);
