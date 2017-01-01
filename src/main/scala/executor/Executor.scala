@@ -4,8 +4,6 @@ import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.firefox.FirefoxDriver
 import story.{Step, StepResult, StepResultStatus, Story}
 
-import scala.util.control.Breaks._
-
 import scala.collection.mutable.ListBuffer
 
 class Executor extends LazyLogging {
@@ -16,15 +14,13 @@ class Executor extends LazyLogging {
     val executeContext = new ExecuteContext()
 
     val stepExecuteResults = new ListBuffer[StepExecuteResult]
-    breakable {
-      for (step <- story.steps) {
-        val stepExecuteResult = executeStep(executeContext, step)
+    for (step <- story.steps) {
+      val stepExecuteResult = executeStep(executeContext, step)
 
-        stepExecuteResults += stepExecuteResult
+      stepExecuteResults += stepExecuteResult
 
-        if (stepExecuteResult.result.isDefined && stepExecuteResult.result.get.status == StepResultStatus.Fail) {
-          break
-        }
+      if (stepExecuteResult.status == StepResultStatus.Fail) {
+        return new ExecuteResult(runId, stepExecuteResults.toList)
       }
     }
     return new ExecuteResult(runId, stepExecuteResults.toList)
@@ -52,7 +48,13 @@ case class ExecuteResult(
                           val stepExecuteResults: Seq[StepExecuteResult]
                         )
 
-case class StepExecuteResult(val startTime:Long, val endTime: Long, val result: Option[StepResult], val ex:Option[Exception])
+case class StepExecuteResult(
+    val startTime:Long,
+    val endTime: Long,
+    val result: Option[StepResult],
+    val ex:Option[Exception]) {
+  def status = result.map( _.status ).getOrElse(StepResultStatus.Fail)
+}
 object StepExecuteResult {
   class Builder {
     private var startTime: Option[Long] = Option.empty
