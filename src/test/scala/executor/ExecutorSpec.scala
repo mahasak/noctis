@@ -1,12 +1,17 @@
 package executor
 
 import org.scalatest._
-import story.{Step, StepResult, Story}
+import story._
 
 class ExecutorSpec extends FlatSpec with Matchers {
   val executor = new Executor()
 
-  private def createStep(stepResult: StepResult) = new Step() {
+  private def createStep(stepResult: StepResult) = new DoStep() {
+    override def doStep(executeContext: ExecuteContext): StepResult = stepResult
+  }
+
+
+  private def createAssertStep(stepResult: StepResult) = new AssertStep() {
     override def doStep(executeContext: ExecuteContext): StepResult = stepResult
   }
 
@@ -44,6 +49,18 @@ class ExecutorSpec extends FlatSpec with Matchers {
     val result = executor.execute("runId", story)
 
     assert( result.stepExecuteResults.size == 2 )
+  }
+
+  it should "execute Ignore fail if Assert type" in {
+    val story = new Story(List(
+      createAssertStep(StepResult.Pass),
+      createAssertStep(StepResult.Fail),
+      createAssertStep(StepResult.Pass)
+    ))
+
+    val result = executor.execute("runId", story)
+
+    assert( result.stepExecuteResults.size == 3 )
   }
 
 

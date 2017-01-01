@@ -2,29 +2,32 @@ package executor
 
 import com.typesafe.scalalogging.LazyLogging
 import org.openqa.selenium.firefox.FirefoxDriver
-import story.{Step, StepResult, StepResultStatus, Story}
-
-import scala.collection.mutable.ListBuffer
+import story._
 
 class Executor extends LazyLogging {
   def execute(runId: String, story: Story): ExecuteResult = {
-
-    logger.debug("Executing story: " + story + ", with runId: " + runId)
-
     val executeContext = new ExecuteContext()
 
-    val stepExecuteResults = new ListBuffer[StepExecuteResult]
-    for (step <- story.steps) {
-      val stepExecuteResult = executeStep(executeContext, step)
+    def executeSteps(steps: Seq[Step]):Seq[StepExecuteResult] = {
+      steps match {
+        case step :: remainingSteps => {
+          val stepExecuteResult = executeStep(executeContext, step)
 
-      stepExecuteResults += stepExecuteResult
-
-      if (stepExecuteResult.status == StepResultStatus.Fail) {
-        return new ExecuteResult(runId, stepExecuteResults.toList)
+          if(step.isInstanceOf[AssertStep] || stepExecuteResult.status != StepResultStatus.Fail) {
+            return stepExecuteResult +: executeSteps(remainingSteps)
+          } else {
+            return Seq(stepExecuteResult)
+          }
+        }
+        case _ => Seq()
       }
     }
-    return new ExecuteResult(runId, stepExecuteResults.toList)
+
+    logger.debug("Executing story: " + story + ", with runId: " + runId)
+    return new ExecuteResult( runId, executeSteps(story.steps) )
   }
+
+
 
   def executeStep(executeContext: ExecuteContext, step: Step): StepExecuteResult = {
     val rb = new StepExecuteResult.Builder()
