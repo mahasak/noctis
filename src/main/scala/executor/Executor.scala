@@ -1,6 +1,7 @@
 package executor
 
 import com.typesafe.scalalogging.LazyLogging
+import config.Config
 import org.openqa.selenium.firefox.FirefoxDriver
 import story._
 
@@ -47,5 +48,6 @@ class Executor extends LazyLogging {
 }
 
 class ExecuteContext(val runId:String) {
+  System.setProperty("webdriver.gecko.driver", Config.get("gecko.path"))
   lazy val driver = new FirefoxDriver()
 }

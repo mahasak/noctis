@@ -9,7 +9,7 @@ object Main extends LazyLogging {
 
     SchemaMigration.run()
 
-    var parser = new UrsaParser
+    val parser = new UrsaParser
     val storyTest =
       """
         |Go to "www.agoda.com"

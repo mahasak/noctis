@@ -15,6 +15,7 @@ trait AssertStep extends Step
 
 case class StepGoto(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
+    executeContext.driver.get(param.url)
     StepResult.Pass
   }
 }
