@@ -40,7 +40,14 @@ class BearStoryParserSpec extends FlatSpec with Matchers{
       """
         |Go to "http://www.google.com"
         |Type "BigBears.IO" in "lst-ib"
-        |Press ENTER on "lst-ib"
+        |Click on "_fZl"
+        |Wait for "2000" ms
+        |Type "Norbor" in "lst-ib"
+        |Click on "_fZl"
+        |Wait for "2000" ms
+        |Type "Varokas Panusuwan" in "lst-ib"
+        |Click on "_fZl"
+        |Wait for "2000" ms
         |Close browser
       """.stripMargin
 

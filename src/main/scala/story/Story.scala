@@ -38,6 +38,8 @@ case class StepClose(param: StepParameter) extends DoStep {
 
 case class StepClick(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
+    waitFor(executeContext.driver, _.findElement(By.id(param.id)), 5)
+    executeContext.driver.findElement(By.id(param.id)).click()
     StepResult.Pass
   }
 }
@@ -45,7 +47,9 @@ case class StepClick(param: StepParameter) extends DoStep {
 case class StepType(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
     waitFor(executeContext.driver, _.findElement(By.id(param.id)), 5)
-    executeContext.driver.findElement(By.id(param.id)).sendKeys(param.expect)
+    val e = executeContext.driver.findElement(By.id(param.id))
+    e.clear
+    e.sendKeys(param.expect)
     StepResult.Pass
   }
 }
@@ -58,6 +62,12 @@ case class StepPressEnter(param: StepParameter) extends DoStep {
   }
 }
 
+case class StepWait(param: StepParameter) extends DoStep {
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    Thread.sleep(param.expect.toInt)
+    StepResult.Pass
+  }
+}
 case class StepAssert(param: StepParameter) extends AssertStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
     StepResult.Pass
@@ -73,19 +83,21 @@ case class StepNoop(param: StepParameter) extends DoStep {
 class UrsaParser {
   def stepMatcher(string: String): Step = {
     val regexGoto = """(Go to) "(.*?)"""".r
-    val regexClick = """(Click).*([^\s]+)""".r
+    val regexClick = """Click on "(.*?)"""".r
     val regexType = """Type "(.*?)" in "(.*?)"""".r
     val regexPressEnter = """Press ENTER on "(.*?)"""".r
     val regexAssert = """(Assert).*([^\s]+)""".r
+    val regexWaitFor = """Wait for "(.*?)" ms""".r
     val regexClose = """(Close browser)""".r
 
     string match {
       case regexGoto(_, url) => StepGoto(StepParameter("", url, ""))
-      case regexClick(_*) => StepClick(StepParameter())
+      case regexClick(id) => StepClick(StepParameter(id,"",""))
       case regexType(text,id) => StepType(StepParameter(id, "", text))
       case regexPressEnter(id) => StepPressEnter(StepParameter(id, "", ""))
       case regexAssert(_*) => StepAssert(StepParameter())
       case regexClose(_*) => StepClose(StepParameter())
+      case regexWaitFor(ms) => StepWait(StepParameter("", "", ms))
       case _ => StepNoop(new StepParameter)
     }
   }
