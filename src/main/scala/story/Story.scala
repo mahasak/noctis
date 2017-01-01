@@ -57,7 +57,7 @@ class UrsaParser {
     val regexClick = """(Click).*([^\s]+)""".r
     val regexType = """(Type).*([^\s]+)""".r
     val regexAssert = """(Assert).*([^\s]+)""".r
-    val regexClose = """(Close browser).*([^\s]+)""".r
+    val regexClose = """(Close browser)""".r
 
     string match {
       case regexGoto(_, url) => StepGoto(StepParameter("", url, ""))

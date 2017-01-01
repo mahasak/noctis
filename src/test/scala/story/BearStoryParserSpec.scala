@@ -38,10 +38,13 @@ class BearStoryParserSpec extends FlatSpec with Matchers{
     val parser = new UrsaParser
     val storyTest =
       """
-        |Go to "www.agoda.com"
+        |Go to "http://www.agoda.com"
+        |Close browser
       """.stripMargin
-
+    val executeContext = new ExecuteContext("test-002")
     val story = parser.parseStory(storyTest)
+    story.steps(0).doStep(executeContext)
+    story.steps(1).doStep(executeContext)
     println(story)
     val result = executor.execute("test-002", story)
 

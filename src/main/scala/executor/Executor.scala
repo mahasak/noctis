@@ -13,7 +13,7 @@ class Executor extends LazyLogging {
       steps match {
         case step :: remainingSteps => {
           val stepExecuteResult = executeStep(executeContext, step)
-
+          println(step.toString)
           if(step.isInstanceOf[AssertStep] || stepExecuteResult.status != StepResultStatus.Fail) {
             return stepExecuteResult +: executeSteps(remainingSteps)
           } else {
@@ -35,6 +35,7 @@ class Executor extends LazyLogging {
 
     rb.withStartTime(System.currentTimeMillis())
     try {
+      println(step.toString)
       rb.withResult( step.doStep(executeContext) )
     } catch {
       case e:Exception => rb.withException( e )
