@@ -10,7 +10,7 @@ import executor.{ExecuteContext, Executor, StepExecuteResult}
   */
 class BearStoryParserSpec extends FlatSpec with Matchers{
   val executor = new Executor()
-
+  /*
   it should "parse a story from string" in {
     val parser = new UrsaParser
     val storyTest =
@@ -33,7 +33,7 @@ class BearStoryParserSpec extends FlatSpec with Matchers{
     assert(resultGoto.status == StepResultStatus.Pass)
     assert(resultClose.status == StepResultStatus.Pass)
   }
-
+  */
   it should "open and close web browser from story" in {
     val parser = new UrsaParser
     val storyTest =
@@ -42,10 +42,14 @@ class BearStoryParserSpec extends FlatSpec with Matchers{
         |Type "BigBears.IO" in "lst-ib"
         |Click on "_fZl"
         |Wait for "2000" ms
+        |Clear "lst-ib"
         |Type "Norbor" in "lst-ib"
         |Click on "_fZl"
         |Wait for "2000" ms
+        |Clear "lst-ib"
         |Type "Varokas Panusuwan" in "lst-ib"
+        |It should be display "Varokas Panusuwan" in "lst-ib"
+        |It should not display "Varokas Panusuwan2" in "lst-ib"
         |Click on "_fZl"
         |Wait for "2000" ms
         |Close browser
