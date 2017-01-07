@@ -50,6 +50,12 @@ class Executor extends LazyLogging {
 }
 
 class ExecuteContext(val runId:String) {
-  System.setProperty("webdriver.gecko.driver", Config.get("gecko.path"))
+  private val geckoPath = System.getProperty("os.name") match {
+    case "Mac OS X" => Config.get("gecko.path.osx")
+    case "Linux" => Config.get("gecko.path.linux")
+    case _ => Config.get("gecko.path.windows")
+  }
+
+  System.setProperty("webdriver.gecko.driver", geckoPath)
   lazy val driver = new FirefoxDriver()
 }
