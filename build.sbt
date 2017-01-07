@@ -13,6 +13,8 @@ scalacOptions := Seq("-feature", "-deprecation")
 
 //lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging)
 
+mainClass in (Compile, run) := Some("Main")
+
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-core" % "1.1.8"
   , "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.4"
