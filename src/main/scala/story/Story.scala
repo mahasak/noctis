@@ -112,6 +112,26 @@ case class StepShouldNotDisplayText(param: StepParameter) extends AssertStep {
   }
 }
 
+case class StepShouldVisible(param: StepParameter) extends AssertStep {
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    getElementById(executeContext.driver, param.id)
+      .isDisplayed match {
+      case true => StepResult.Pass
+      case _ => StepResult.Fail
+    }
+  }
+}
+
+case class StepShouldNotVisible(param: StepParameter) extends AssertStep {
+  def doStep(executeContext: ExecuteContext): StepResult = {
+    getElementById(executeContext.driver, param.id)
+      .isDisplayed match {
+      case false => StepResult.Pass
+      case _ => StepResult.Fail
+    }
+  }
+}
+
 case class StepNoop(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
     StepResult.Pass
@@ -126,7 +146,8 @@ class UrsaParser {
     val regexClear = """Clear "(.*?)"""".r
     val regexPressEnter = """Press ENTER on "(.*?)"""".r
     val regexAssert = """(Assert).*([^\s]+)""".r
-    val regexDisplay = """It should (.*?) display "(.*?)" in "(.*?)"""".r
+    val regexDisplay = """"(.*?)" should (.*?) display "(.*?)"""".r
+    val regexVisible = """"(.*?)" should (.*?) visible""".r
     val regexWaitFor = """Wait for "(.*?)" ms""".r
     val regexSubmit = """Submit "(.*?)"""".r
     val regexClose = """(Close browser)""".r
@@ -138,7 +159,8 @@ class UrsaParser {
       case regexClear(id) => StepClear(StepParameter(id, "", ""))
       case regexPressEnter(id) => StepPressEnter(StepParameter(id, "", ""))
       case regexAssert(_*) => StepAssert(StepParameter())
-      case regexDisplay(condition,text,id) => displayAssertMatcher(condition,id,text)
+      case regexDisplay(id,condition,text) => displayAssertMatcher(condition,id,text)
+      case regexVisible(id,condition) => visibilityAssertMatcher(condition, id)
       case regexClose(_*) => StepClose(StepParameter())
       case regexWaitFor(ms) => StepWait(StepParameter("", "", ms))
       case regexSubmit(id) => StepSubmit(StepParameter(id,"",""))
@@ -150,6 +172,14 @@ class UrsaParser {
     condition match {
       case "be" => StepShouldDisplayText(StepParameter(id, "", text))
       case "not" => StepShouldNotDisplayText(StepParameter(id, "", text))
+      case _ => StepNoop(new StepParameter)
+    }
+  }
+
+  def visibilityAssertMatcher(condition: String, id:String): Step = {
+    condition match {
+      case "be" => StepShouldVisible(StepParameter(id))
+      case "not" => StepShouldNotVisible(StepParameter(id))
       case _ => StepNoop(new StepParameter)
     }
   }

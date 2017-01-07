@@ -48,8 +48,10 @@ class BearStoryParserSpec extends FlatSpec with Matchers{
         |Wait for "2000" ms
         |Clear "lst-ib"
         |Type "Varokas Panusuwan" in "lst-ib"
-        |It should be display "Varokas Panusuwan" in "lst-ib"
-        |It should not display "Varokas Panusuwan2" in "lst-ib"
+        |"lst-ib" should be display "Varokas Panusuwan"
+        |"lst-ib" should not display "Varokas Panusuwan2"
+        |"lst-ib" should be visible
+        |"lst-ib" should not visible
         |Click on "_fZl"
         |Wait for "2000" ms
         |Close browser
