@@ -14,6 +14,7 @@ scalacOptions := Seq("-feature", "-deprecation")
 //lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging)
 
 mainClass in (Compile, run) := Some("Main")
+mainClass in assembly := Some("Main")
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-core" % "1.1.8"
