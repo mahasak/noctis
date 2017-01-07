@@ -15,6 +15,7 @@ class Executor extends LazyLogging {
           val stepExecuteResult = executeStep(executeContext, step)
           println(step.toString)
           if(step.isInstanceOf[AssertStep] || stepExecuteResult.status != StepResultStatus.Fail) {
+            println(stepExecuteResult.status.toString)
             return stepExecuteResult +: executeSteps(remainingSteps)
           } else {
             return Seq(stepExecuteResult)
