@@ -5,6 +5,7 @@ package story
   */
 
 class UrsaParser {
+
   def stepMatcher(string: String): Step = {
     val regexGoto = """(Go to) "(.*?)"""".r
     val regexClick = """Click on "(.*?)"""".r

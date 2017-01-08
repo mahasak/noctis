@@ -3,29 +3,9 @@ package story
 import executor.ExecuteContext
 import org.openqa.selenium.support.ui.{ExpectedCondition, WebDriverWait}
 import org.openqa.selenium.{By, Keys, WebDriver, WebElement}
-import story.StepResultStatus.StepResultStatus
 
-case class Story(steps: List[Step])
 
-trait Step {
-  def waitFor(driver: WebDriver, f: (WebDriver) => WebElement, timeOut: Int) : WebElement = {
-    new WebDriverWait(driver, timeOut).until(
-      new ExpectedCondition[WebElement] {
-        override def apply(d: WebDriver) = f(d)
-      })
-  }
 
-  def getElementById(driver: WebDriver, id: String) : WebElement = {
-      waitFor(driver, _.findElement(By.id(id)), 5)
-      return driver.findElement(By.id(id))
-  }
-
-  def doStep(executeContext: ExecuteContext): StepResult
-}
-
-trait DoStep extends Step
-
-trait AssertStep extends Step
 
 case class StepGoto(param: StepParameter) extends DoStep {
   def doStep(executeContext: ExecuteContext): StepResult = {
@@ -137,19 +117,4 @@ case class StepNoop(param: StepParameter) extends DoStep {
 }
 
 
-case class StepParameter(id: String = ""
-                         , url: String = ""
-                         , expect: String = "")
 
-case class StepResult(status: StepResultStatus)
-
-object StepResult {
-  val Pass = StepResult(StepResultStatus.Pass)
-  val Fail = StepResult(StepResultStatus.Fail)
-}
-
-object StepResultStatus extends Enumeration {
-  type StepResultStatus = Value
-  val Pass = Value(0)
-  val Fail = Value(1)
-}

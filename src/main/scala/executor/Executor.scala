@@ -36,8 +36,7 @@ class Executor extends LazyLogging {
       rb.withResult( step.doStep(executeContext) )
     } catch {
       case e:Exception => rb.withException( e )
-    }
-    finally {
+    } finally {
       rb.withEndTime(System.currentTimeMillis())
     }
 
